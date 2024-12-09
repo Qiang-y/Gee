@@ -8,23 +8,22 @@ import (
 func main() {
 	r := gee.New()
 	r.GET("/", func(c *gee.Context) {
-		c.String(http.StatusOK, "helloworld the path is%q\n", c.Path)
+		c.HTML(http.StatusOK, "<h1>Hello Gee</h1>")
 	})
+
 	r.GET("/hello", func(c *gee.Context) {
-		h := gee.H{}
-		for k, v := range c.Req.Header {
-			//fmt.Fprintf(w, "Header[%q] = %q\n", k, v)
-			h[k] = v
-		}
-		c.JSON(http.StatusOK, h)
+		// expect /hello?name=geektutu
+		c.String(http.StatusOK, "hello %s, you're at %s\n", c.Query("name"), c.Path)
 	})
-	r.POST("/login", func(c *gee.Context) {
-		userid := c.Query("userid")
-		password := c.Query("password")
-		c.JSON(http.StatusOK, gee.H{
-			"userid":   userid,
-			"password": password,
-		})
+
+	r.GET("/hello/:name", func(c *gee.Context) {
+		// expect /hello/geektutu
+		c.String(http.StatusOK, "hello %s, you're at %s\n", c.Param("name"), c.Path)
 	})
+
+	r.GET("/assets/*filepath", func(c *gee.Context) {
+		c.JSON(http.StatusOK, gee.H{"filepath": c.Param("filepath")})
+	})
+
 	r.Run(":9999")
 }
