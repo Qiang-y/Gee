@@ -47,7 +47,7 @@ func (n *node) matchChildren(part string) (children []*node) {
 
 func (n *node) insert(pattern string, parts []string, height int) {
 	if len(parts) == height {
-		if n.pattern != "" {
+		if n.pattern != "" && n.pattern != pattern {
 			panic("Route Conflict!")
 		}
 		n.pattern = pattern
